@@ -13,9 +13,6 @@ const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
 
-// ---------- Database ----------
-connectDB();
-
 // ---------- View engine ----------
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -65,8 +62,12 @@ app.use((err, req, res, _next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`\n  XP Movies is running → http://localhost:${PORT}\n`);
-});
+
+(async () => {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`\n  XP Movies is running → http://localhost:${PORT}\n`);
+  });
+})();
 
 module.exports = app;
