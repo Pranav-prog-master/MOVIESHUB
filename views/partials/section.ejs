@@ -1,0 +1,19 @@
+<%
+  var movies = typeof sectionMovies !== 'undefined' ? sectionMovies : [];
+  var title = typeof sectionTitle !== 'undefined' ? sectionTitle : 'Movies';
+  var link = typeof sectionLink !== 'undefined' ? sectionLink : null;
+%>
+<% if (movies && movies.length) { %>
+  <section class="max-w-7xl mx-auto px-4 mt-12">
+    <div class="flex items-end justify-between mb-5">
+      <h2 class="font-display text-2xl font-bold" style="color:var(--text)"><%= title %></h2>
+      <% if (link) { %><a href="<%= link %>" class="text-sm" style="color:var(--brand)">View all →</a><% } %>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <% movies.forEach(function (m) { %>
+        <%- include('movie-card', { movie: m }) %>
+      <% }); %>
+    </div>
+  </section>
+<% } %>
+

@@ -1,0 +1,16 @@
+<%- include('partials/layout-open') %>
+
+<section class="max-w-7xl mx-auto px-4 pt-10">
+  <h1 class="font-display text-3xl md:text-4xl font-extrabold text-white mb-6">Genres</h1>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <% genres.forEach(function (g) { %>
+      <a href="/genre/<%= g.slug %>" class="glass rounded-2xl p-6 text-center hover:border-brand-500/40 transition group">
+        <h3 class="font-display font-semibold text-white group-hover:text-brand-400"><%= g.name %></h3>
+        <p class="text-xs text-slate-500 mt-1"><%= g.count || 0 %> titles</p>
+      </a>
+    <% }); %>
+  </div>
+</section>
+
+<%- include('partials/layout-close') %>
+

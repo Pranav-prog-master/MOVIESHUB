@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="XP Movies — discover movies, web series and where to watch them legally." />
+    <title><%= typeof title !== 'undefined' ? title : 'XP Movies' %></title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <!-- Apply saved theme BEFORE paint to prevent flicker -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('xp-theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ['Outfit', 'system-ui', 'sans-serif'],
+              body: ['Inter', 'system-ui', 'sans-serif']
+            },
+            colors: {
+              brand: {
+                50: '#fef2f2',
+                100: '#fee2e2',
+                400: '#f87171',
+                500: '#ef4444',
+                600: '#dc2626',
+                700: '#b91c1c'
+              },
+              ink: {
+                900: '#0a0a0f',
+                800: '#0f0f17',
+                700: '#16161f',
+                600: '#1d1d29'
+              }
+            }
+          }
+        }
+      };
+    </script>
+  </head>
+

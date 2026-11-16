@@ -1,0 +1,33 @@
+<%- include('../partials/layout-open') %>
+
+<div class="flex">
+  <%- include('../partials/admin-sidebar') %>
+  <div class="flex-1 p-4 md:p-8">
+    <h1 class="font-display text-2xl font-bold text-white mb-6">Genres</h1>
+
+    <form action="/admin/genres" method="post" class="glass rounded-2xl border border-white/10 p-5 mb-6 flex gap-3 items-end max-w-md">
+      <div class="flex-1">
+        <label class="text-sm text-slate-300">New genre</label>
+        <input name="name" required class="input mt-1 w-full" placeholder="e.g. Sci-Fi" />
+      </div>
+      <button class="btn-primary">Add</button>
+    </form>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <% genres.forEach(function (g) { %>
+        <div class="glass rounded-xl p-4 flex items-center justify-between border border-white/10">
+          <div>
+            <p class="text-white font-medium"><%= g.name %></p>
+            <p class="text-xs text-slate-500"><%= g.slug %></p>
+          </div>
+          <form action="/admin/genres/<%= g._id %>/delete" method="post" onsubmit="return confirm('Delete genre?');">
+            <button class="text-xs text-red-300 hover:text-red-200">Delete</button>
+          </form>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/layout-close') %>
+

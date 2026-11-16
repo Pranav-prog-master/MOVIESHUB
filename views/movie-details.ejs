@@ -1,0 +1,86 @@
+<%- include('partials/layout-open') %>
+
+<section class="relative">
+  <div class="absolute inset-0 h-[420px]">
+    <img src="<%= movie.poster || '/images/hero.svg' %>" alt="" class="w-full h-full object-cover opacity-25 blur-sm"
+      onerror="this.src='/images/hero.svg'" />
+    <div class="absolute inset-0 dark:bg-gradient-to-t dark:from-ink-900 dark:via-ink-900/80 dark:to-ink-900/40 bg-gradient-to-t from-slate-100 via-slate-100/80 to-slate-100/30"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-4 pt-10 pb-10 grid md:grid-cols-4 gap-8">
+    <div class="md:col-span-1">
+      <img src="<%= movie.poster || '/images/placeholder.svg' %>" alt="<%= movie.title %>"
+        class="rounded-2xl shadow-2xl dark:border-white/10 border-slate-200 border w-full"
+        onerror="this.src='/images/placeholder.svg'" />
+    </div>
+
+    <div class="md:col-span-3">
+      <p class="text-xs uppercase tracking-widest text-brand-400 font-semibold mb-3"><%= movie.category || 'Movie' %></p>
+      <h1 class="font-display text-3xl md:text-5xl font-extrabold dark:text-white text-slate-900"><%= movie.title %></h1>
+      <div class="flex flex-wrap items-center gap-3 mt-3 text-sm dark:text-slate-300 text-slate-600">
+        <% if (movie.releaseYear) { %><span><%= movie.releaseYear %></span><% } %>
+        <% if (movie.runtime) { %><span class="text-slate-400">•</span><span><%= movie.runtime %> min</span><% } %>
+      </div>
+
+      <p class="mt-5 dark:text-slate-300 text-slate-600 leading-relaxed max-w-3xl"><%= movie.description || 'No description available.' %></p>
+
+      <div class="mt-7">
+        <% if (movie.type === 'Series' && movie.episodes && movie.episodes.length) { %>
+          <!-- Series: episode list -->
+          <% if (typeof user !== 'undefined' && user) { %>
+            <h3 class="text-sm font-semibold uppercase tracking-widest text-brand-400 mb-3">Episodes</h3>
+            <div class="flex flex-col gap-2 max-w-lg">
+              <% movie.episodes.forEach(function(ep, i) { %>
+                <a href="<%= ep.url %>" target="_blank" rel="noopener noreferrer"
+                  class="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-white/10 hover:border-brand-500/50 hover:bg-white/5 transition group">
+                  <span class="text-sm text-slate-300 group-hover:text-white transition">
+                    <%= ep.label || ('Episode ' + (i + 1)) %>
+                  </span>
+                  <span class="text-xs px-3 py-1 rounded-full shrink-0" style="background:rgba(239,68,68,0.15);color:var(--brand)">▶ Watch / Download</span>
+                </a>
+              <% }); %>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">Each episode opens the external website in a new tab.</p>
+          <% } else { %>
+            <a href="/login" class="btn-primary inline-flex">🔒 Login to Watch Episodes</a>
+            <p class="text-xs text-slate-500 mt-2">You need to be logged in to access episode links.</p>
+          <% } %>
+        <% } else if (movie.watchUrl) { %>
+          <!-- Movie: single link -->
+          <% if (typeof user !== 'undefined' && user) { %>
+            <a href="<%= movie.watchUrl %>" target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex">▶ Watch / Download</a>
+            <p class="text-xs text-slate-500 mt-2">Opens the external website in a new tab.</p>
+          <% } else { %>
+            <a href="/login" class="btn-primary inline-flex">🔒 Login to Watch / Download</a>
+            <p class="text-xs text-slate-500 mt-2">You need to be logged in to access this link.</p>
+          <% } %>
+        <% } else { %>
+          <p class="text-sm text-slate-500">An external link has not been added yet.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% if (movie.screenshots && movie.screenshots.length) { %>
+  <section class="max-w-7xl mx-auto px-4 mt-8">
+    <h2 class="font-display text-2xl font-bold dark:text-white text-slate-900 mb-4">Preview Screenshots</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <% movie.screenshots.slice(0, 4).forEach(function (shot, index) { %>
+        <img src="<%= shot %>" alt="<%= movie.title %> preview <%= index + 1 %>"
+          loading="lazy" class="w-full aspect-video object-cover rounded-xl dark:border-white/10 border-slate-200 border" />
+      <% }); %>
+    </div>
+  </section>
+<% } %>
+
+<% if (related && related.length) { %>
+  <section class="max-w-7xl mx-auto px-4 mt-12">
+    <h2 class="font-display text-2xl font-bold dark:text-white text-slate-900 mb-4">More in <%= movie.category || 'this category' %></h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <% related.forEach(function (m) { %><%- include('partials/movie-card', { movie: m }) %><% }); %>
+    </div>
+  </section>
+<% } %>
+
+<%- include('partials/layout-close') %>

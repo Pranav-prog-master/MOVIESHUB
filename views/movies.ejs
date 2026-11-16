@@ -1,0 +1,63 @@
+<%- include('partials/layout-open') %>
+
+<section class="max-w-7xl mx-auto px-4 pt-10">
+  <h1 class="font-display text-3xl md:text-4xl font-extrabold text-white"><%= typeof heading !== 'undefined' ? heading : 'Browse XP Movies' %></h1>
+
+  <!-- Filters -->
+  <form method="get" action="/movies" class="glass rounded-2xl p-4 mt-6 flex flex-wrap gap-3 items-end">
+    <div class="flex-1 min-w-[200px]">
+      <label class="text-xs text-slate-400">Search</label>
+      <input name="q" value="<%= query.q || '' %>" placeholder="Title, actor, director…"
+        class="input mt-1 w-full" />
+    </div>
+    <div class="min-w-[150px]">
+      <label class="text-xs text-slate-400">Category</label>
+      <select name="category" class="input mt-1 w-full">
+        <option value="">All categories</option>
+        <% (categories || ['Hollywood','Bollywood','South','Anime','Cartoon']).forEach(function (cat) { %>
+          <option value="<%= cat %>" <%= query.category === cat ? 'selected' : '' %>><%= cat %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="min-w-[120px]">
+      <label class="text-xs text-slate-400">Year</label>
+      <input name="year" value="<%= query.year || '' %>" placeholder="e.g. 2024" class="input mt-1 w-full" />
+    </div>
+    <div class="min-w-[150px]">
+      <label class="text-xs text-slate-400">Sort by</label>
+      <select name="sort" class="input mt-1 w-full">
+        <option value="popularity" <%= (!query.sort || query.sort === 'popularity') ? 'selected' : '' %>>Popularity</option>
+        <option value="rating" <%= query.sort === 'rating' ? 'selected' : '' %>>Rating</option>
+        <option value="year" <%= query.sort === 'year' ? 'selected' : '' %>>Release Year</option>
+      </select>
+    </div>
+    <button class="btn-primary">Apply</button>
+    <a href="/movies" class="btn-ghost">Reset</a>
+  </form>
+
+  <p class="text-sm text-slate-400 mt-4"><%= total %> movie(s) found</p>
+
+  <% if (movies && movies.length) { %>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-4">
+      <% movies.forEach(function (m) { %><%- include('partials/movie-card', { movie: m }) %><% }); %>
+    </div>
+
+    <!-- Pagination -->
+    <% if (totalPages > 1) { %>
+      <div class="flex justify-center gap-2 mt-10">
+        <% if (page > 1) { %><a href="?q=<%= query.q||'' %>&category=<%= query.category||'' %>&year=<%= query.year||'' %>&sort=<%= query.sort||'' %>&page=<%= page-1 %>" class="btn-ghost">← Prev</a><% } %>
+        <span class="px-4 py-2 text-sm text-slate-400">Page <%= page %> of <%= totalPages %></span>
+        <% if (page < totalPages) { %><a href="?q=<%= query.q||'' %>&category=<%= query.category||'' %>&year=<%= query.year||'' %>&sort=<%= query.sort||'' %>&page=<%= page+1 %>" class="btn-ghost">Next →</a><% } %>
+      </div>
+    <% } %>
+  <% } else { %>
+    <div class="glass rounded-2xl p-12 text-center mt-6">
+      <p class="text-slate-300 text-lg">No movies found.</p>
+      <p class="text-slate-500 text-sm mt-1">Try a different search or add movies from the admin dashboard.</p>
+      <a href="/admin/movies/new" class="btn-primary inline-flex mt-4">Add a Movie</a>
+    </div>
+  <% } %>
+</section>
+
+<%- include('partials/layout-close') %>
+

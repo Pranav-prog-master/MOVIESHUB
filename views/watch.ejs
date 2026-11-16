@@ -1,0 +1,83 @@
+<%- include('partials/layout-open') %>
+
+<section class="max-w-6xl mx-auto px-4 pt-8">
+  <a href="/movie/<%= movie.slug %>" class="text-sm text-slate-400 hover:text-white inline-flex items-center gap-1 mb-4">← Back to details</a>
+
+  <div class="grid lg:grid-cols-3 gap-8">
+    <!-- Player area -->
+    <div class="lg:col-span-2">
+      <div class="aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black relative">
+        <% if (embed) { %>
+          <iframe src="<%= embed %>" class="w-full h-full" allowfullscreen title="Player"></iframe>
+        <% } else if (movie.trailerUrl) { %>
+          <div class="absolute inset-0 grid place-items-center text-center p-6">
+            <div>
+              <p class="text-slate-300 mb-4">Embedding is not permitted for this title. Open the official provider to watch.</p>
+              <a href="<%= movie.trailerUrl %>" target="_blank" rel="noopener" class="btn-ghost">🎬 Watch Trailer</a>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="absolute inset-0 grid place-items-center text-center p-6">
+            <p class="text-slate-400">No player available. Use an authorized source below.</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Source selection -->
+      <div class="mt-6">
+        <h2 class="font-display text-xl font-bold text-white mb-3">Choose a Source</h2>
+        <% var sources = (movie.sources && movie.sources.length) ? movie.sources.slice() : []; %>
+        <% if (movie.watchUrl) { %><% sources.push({ name: 'Official Provider', type: 'Streaming', url: movie.watchUrl }); %><% } %>
+        <% if (sources.length) { %>
+          <% if (typeof user !== 'undefined' && user) { %>
+            <div class="space-y-2">
+              <% sources.forEach(function (s) { %>
+                <a href="<%= s.url %>" target="_blank" rel="noopener"
+                  class="glass rounded-xl px-4 py-3 flex items-center justify-between hover:border-brand-500/40 transition">
+                  <span class="text-white font-medium"><%= s.name %></span>
+                  <span class="text-xs text-brand-400"><%= s.type %> ↗</span>
+                </a>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <div class="glass rounded-xl px-4 py-5 text-center">
+              <p class="text-slate-400 text-sm mb-3">🔒 Login to access watch sources.</p>
+              <a href="/login" class="btn-primary !py-2 !px-5 text-sm">Login</a>
+            </div>
+          <% } %>
+        <% } else { %>
+          <p class="text-slate-500 text-sm">No authorized watch sources listed yet.</p>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <aside>
+      <div class="glass rounded-2xl p-5">
+        <img src="<%= movie.poster || '/images/placeholder.svg' %>" alt="<%= movie.title %>"
+          class="rounded-xl w-24 mb-4" onerror="this.src='/images/placeholder.svg'" />
+        <h1 class="font-display text-2xl font-bold text-white"><%= movie.title %></h1>
+        <div class="text-sm text-slate-400 mt-1 space-y-1">
+          <% if (movie.releaseYear) { %><p>Year: <%= movie.releaseYear %></p><% } %>
+          <% if (movie.runtime) { %><p>Runtime: <%= movie.runtime %> min</p><% } %>
+          <% if (movie.genres && movie.genres.length) { %><p>Genre: <%= movie.genres.join(', ') %></p><% } %>
+          <% if (movie.rating) { %><p>Rating: <%= movie.rating.toFixed(1) %>/10</p><% } %>
+        </div>
+        <a href="/movie/<%= movie.slug %>" class="btn-primary w-full text-center mt-4">Full Details</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Related -->
+  <% if (related && related.length) { %>
+    <div class="mt-12">
+      <h2 class="font-display text-2xl font-bold text-white mb-4">Related Movies</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <% related.forEach(function (m) { %><%- include('partials/movie-card', { movie: m }) %><% }); %>
+      </div>
+    </div>
+  <% } %>
+</section>
+
+<%- include('partials/layout-close') %>
+

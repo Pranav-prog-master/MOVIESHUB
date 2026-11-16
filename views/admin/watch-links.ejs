@@ -1,0 +1,35 @@
+<%- include('../partials/layout-open') %>
+
+<div class="flex">
+  <%- include('../partials/admin-sidebar') %>
+  <div class="flex-1 p-4 md:p-8">
+    <h1 class="font-display text-2xl font-bold text-white mb-6">Watch Links</h1>
+
+    <% if (movies && movies.length) { %>
+      <div class="space-y-3">
+        <% movies.forEach(function (m) { %>
+          <div class="glass rounded-xl border border-white/10 p-4">
+            <div class="flex items-center justify-between">
+              <p class="text-white font-medium"><%= m.title %></p>
+              <a href="/movie/<%= m.slug %>" class="text-xs text-brand-400">View</a>
+            </div>
+            <% if (m.watchUrl) { %><p class="text-xs text-slate-400 mt-1 truncate">Watch: <a href="<%= m.watchUrl %>" class="text-sky-300" target="_blank" rel="noopener"><%= m.watchUrl %></a></p><% } %>
+            <% if (m.downloadUrl) { %><p class="text-xs text-slate-400 mt-1 truncate">Download: <a href="<%= m.downloadUrl %>" class="text-emerald-300" target="_blank" rel="noopener"><%= m.downloadUrl %></a></p><% } %>
+            <% if (m.sources && m.sources.length) { %>
+              <div class="flex flex-wrap gap-2 mt-2">
+                <% m.sources.forEach(function (s) { %>
+                  <span class="text-[11px] px-2 py-1 rounded-full bg-white/5 text-slate-300"><%= s.name %> · <%= s.type %></span>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <p class="text-slate-400">No watch links configured.</p>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/layout-close') %>
+

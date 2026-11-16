@@ -1,0 +1,108 @@
+<%- include('partials/layout-open') %>
+
+<section class="max-w-xl mx-auto px-4 pt-14 pb-16">
+
+  <div class="mb-8">
+    <h1 class="font-display text-3xl font-extrabold" style="color:var(--text)">Settings</h1>
+    <p class="text-sm mt-1" style="color:var(--muted)">Manage your account, password and appearance.</p>
+  </div>
+
+  <!-- ── Color Theme ── -->
+  <div class="glass rounded-2xl p-6 mb-5">
+    <p class="text-xs font-semibold tracking-widest uppercase mb-4" style="color:var(--brand)">Color Theme</p>
+    <div class="space-y-1" id="theme-list">
+      <%
+        var themes = [
+          { id: 'dark',        label: 'Dark (Default)', dots: ['#94a3b8','#ef4444','#0a0a0f'] },
+          { id: 'light',       label: 'Light',          dots: ['#e2e8f0','#ef4444','#f1f5f9'] },
+          { id: 'monokai',     label: 'Monokai',        dots: ['#f92672','#a6e22e','#272822'] },
+          { id: 'solarized',   label: 'Solarized Dark', dots: ['#2aa198','#268bd2','#002b36'] },
+          { id: 'rose-pine',   label: 'Rosé Pine',      dots: ['#eb6f92','#c4a7e7','#191724'] },
+          { id: 'tokyo-night', label: 'Tokyo Night',    dots: ['#7aa2f7','#bb9af7','#1a1b26'] },
+          { id: 'catppuccin',  label: 'Catppuccin Mocha', dots: ['#cba6f7','#89b4fa','#1e1e2e'] },
+          { id: 'nord',        label: 'Nord',           dots: ['#88c0d0','#81a1c1','#2e3440'] },
+          { id: 'gruvbox',     label: 'Gruvbox Dark',   dots: ['#b8bb26','#fabd2f','#282828'] }
+        ];
+      %>
+      <% themes.forEach(function(t) { %>
+        <button
+          onclick="applyTheme('<%= t.id %>')"
+          data-theme-id="<%= t.id %>"
+          class="theme-row flex items-center gap-3 px-3 py-2.5 rounded-xl text-left"
+        >
+          <span class="theme-radio">
+            <span class="theme-radio-dot"></span>
+          </span>
+          <span class="flex gap-1">
+            <% t.dots.forEach(function(c) { %>
+              <span class="w-3.5 h-3.5 rounded-full" style="background:<%= c %>"></span>
+            <% }); %>
+          </span>
+          <span class="text-sm font-medium flex-1" style="color:var(--text)"><%= t.label %></span>
+          <svg class="theme-tick w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      <% }); %>
+    </div>
+  </div>
+
+  <!-- ── Profile ── -->
+  <div class="glass rounded-2xl p-6 mb-5">
+    <div class="flex items-center gap-4 mb-6">
+      <span class="grid place-items-center w-14 h-14 rounded-2xl text-2xl font-extrabold font-display" style="background:rgba(239,68,68,0.15);color:var(--brand)">
+        <%= user.name.charAt(0).toUpperCase() %>
+      </span>
+      <div>
+        <p class="font-semibold" style="color:var(--text)"><%= user.name %></p>
+        <p class="text-sm" style="color:var(--muted)"><%= user.email %></p>
+        <span class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full" style="background:rgba(239,68,68,0.15);color:var(--brand)"><%= user.role %></span>
+      </div>
+    </div>
+    <form action="/settings/profile" method="post" class="space-y-4">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm block mb-1" style="color:var(--muted)">Name</label>
+          <input name="name" required value="<%= user.name %>" class="input w-full" placeholder="Your name" />
+        </div>
+        <div>
+          <label class="text-sm block mb-1" style="color:var(--muted)">Email</label>
+          <input name="email" type="email" required value="<%= user.email %>" class="input w-full" placeholder="you@example.com" />
+        </div>
+      </div>
+      <button class="btn-primary !py-2 !px-5 text-sm">Save Changes</button>
+    </form>
+  </div>
+
+  <!-- ── Change Password ── -->
+  <div class="glass rounded-2xl p-6">
+    <h2 class="font-display font-bold mb-4" style="color:var(--text)">Change Password</h2>
+    <form action="/settings/password" method="post" class="space-y-4">
+      <% [['currentPassword','cur-pw','eye-cur','Current Password'],['newPassword','new-pw','eye-new','New Password'],['confirmPassword','con-pw','eye-con','Confirm New Password']].forEach(function(f) { %>
+        <div>
+          <label class="text-sm block mb-1" style="color:var(--muted)"><%= f[3] %></label>
+          <div class="relative">
+            <input name="<%= f[0] %>" type="password" id="<%= f[1] %>" required minlength="6" class="input w-full pr-10" placeholder="••••••••" />
+            <button type="button" onclick="togglePw('<%= f[1] %>','<%= f[2] %>')" class="absolute inset-y-0 right-3 flex items-center transition-colors" style="color:var(--muted)">
+              <svg id="<%= f[2] %>" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+      <% }); %>
+      <button class="btn-primary !py-2 !px-5 text-sm">Update Password</button>
+    </form>
+  </div>
+
+</section>
+
+<script>
+  function togglePw(inputId, iconId) {
+    var input = document.getElementById(inputId);
+    var icon  = document.getElementById(iconId);
+    var show  = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    icon.innerHTML = show
+      ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
+      : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+</script>
+
+<%- include('partials/layout-close') %>

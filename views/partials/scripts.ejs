@@ -1,0 +1,17 @@
+<script src="/js/main.js"></script>
+<script>
+  function showToast(type, message) {
+    var c = document.getElementById('toast-container');
+    if (!c) return;
+    var colors = {
+      success: 'border-emerald-500/40 bg-emerald-500/15 text-emerald-200',
+      error:   'border-red-500/40 bg-red-500/15 text-red-200',
+      info:    'border-sky-500/40 bg-sky-500/15 text-sky-200'
+    };
+    var el = document.createElement('div');
+    el.className = 'glass rounded-xl border px-4 py-3 text-sm shadow-xl animate-toast ' + (colors[type] || colors.info);
+    el.textContent = message;
+    c.appendChild(el);
+    setTimeout(function () { el.remove(); }, 4000);
+  }
+</script>

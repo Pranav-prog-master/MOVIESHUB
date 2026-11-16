@@ -1,0 +1,46 @@
+<%- include('../partials/layout-open') %>
+
+<div class="flex">
+  <%- include('../partials/admin-sidebar') %>
+  <div class="flex-1 p-4 md:p-8">
+    <div class="mb-6">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-400 mb-1">XP Admin</p>
+      <h1 class="font-display text-2xl font-bold text-white">XP Control Center</h1>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <div class="stat-card">
+        <p class="text-3xl font-extrabold text-white"><%= stats.totalMovies %></p>
+        <p class="text-slate-400 text-sm mt-1">Total Movies</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-3xl font-extrabold text-white"><%= stats.totalUsers %></p>
+        <p class="text-slate-400 text-sm mt-1">Total Users</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-3xl font-extrabold text-white"><%= stats.totalCategories %></p>
+        <p class="text-slate-400 text-sm mt-1">Main Categories</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-3xl font-extrabold text-white"><%= stats.totalWatchLinks %></p>
+        <p class="text-slate-400 text-sm mt-1">Watch Links</p>
+      </div>
+      <div class="stat-card">
+        <p class="text-3xl font-extrabold text-white"><%= stats.totalPosters %></p>
+        <p class="text-slate-400 text-sm mt-1">Posters</p>
+      </div>
+    </div>
+
+    <div class="glass rounded-2xl p-6 mt-8 border border-white/10">
+      <h2 class="font-display text-lg font-semibold text-white mb-3">Quick actions</h2>
+      <div class="flex flex-wrap gap-3">
+        <a href="/admin/movies/new" class="btn-primary">＋ Add Listing</a>
+        <a href="/admin/movies" class="btn-ghost">View Movies</a>
+        <a href="/" class="btn-ghost">View Site</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/layout-close') %>
+

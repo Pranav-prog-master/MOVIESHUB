@@ -1,0 +1,129 @@
+<%- include('../partials/layout-open') %>
+
+<div class="flex">
+  <%- include('../partials/admin-sidebar') %>
+  <div class="flex-1 p-4 md:p-8">
+    <h1 class="font-display text-2xl font-bold text-white mb-2">Edit Listing</h1>
+    <p class="text-sm text-slate-400 mb-6">Update the details, poster, screenshots or external link.</p>
+
+    <form action="/admin/movies/<%= movie._id %>" method="post" enctype="multipart/form-data" class="glass rounded-2xl border border-white/10 p-6 grid md:grid-cols-2 gap-5">
+      <div class="md:col-span-2">
+        <label class="text-sm text-slate-300">Movie title *</label>
+        <input name="title" value="<%= movie.title %>" required class="input mt-1 w-full" />
+      </div>
+
+      <div>
+        <label class="text-sm text-slate-300">Category *</label>
+        <select name="category" required class="input mt-1 w-full">
+          <% ['Hollywood','Bollywood','South','Anime','Cartoon'].forEach(function(cat){ %>
+            <option value="<%= cat %>" <%= movie.category === cat ? 'selected' : '' %>><%= cat %></option>
+          <% }); %>
+        </select>
+      </div>
+
+      <div>
+        <label class="text-sm text-slate-300">Type *</label>
+        <select name="type" id="typeSelect" required class="input mt-1 w-full">
+          <option value="Movie"  <%= (movie.type || 'Movie') === 'Movie'  ? 'selected' : '' %>>Movie</option>
+          <option value="Series" <%= (movie.type || 'Movie') === 'Series' ? 'selected' : '' %>>Series</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="text-sm text-slate-300">Release year</label>
+        <input name="releaseYear" type="number" min="1900" max="2100" value="<%= movie.releaseYear || '' %>" class="input mt-1 w-full" />
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="text-sm text-slate-300">Short description</label>
+        <textarea name="description" rows="3" class="input mt-1 w-full"><%= movie.description || '' %></textarea>
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="text-sm text-slate-300">Current poster</label>
+        <img src="<%= movie.poster || '/images/placeholder.svg' %>" alt="" class="w-20 rounded-lg my-2" />
+        <label class="text-sm text-slate-300">Replace poster (optional)</label>
+        <input name="poster" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" class="input mt-1 w-full" />
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="text-sm text-slate-300">Current preview screenshots</label>
+        <div class="flex flex-wrap gap-3 my-2">
+          <% (movie.screenshots || []).forEach(function(shot){ %>
+            <img src="<%= shot %>" alt="Preview screenshot" class="w-32 aspect-video object-cover rounded-lg border border-white/10" />
+          <% }); %>
+          <% if (!(movie.screenshots || []).length) { %><p class="text-xs text-slate-500">No screenshots added yet.</p><% } %>
+        </div>
+        <label class="text-sm text-slate-300">Replace screenshot gallery (up to 4 new images)</label>
+        <input name="screenshots" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" multiple class="input mt-1 w-full" />
+        <p class="text-xs text-slate-500 mt-1">If you choose new screenshots, they replace the current gallery. Leave empty to keep existing.</p>
+      </div>
+
+      <!-- Movie: single link -->
+      <div id="section-movie" class="md:col-span-2">
+        <label class="text-sm text-slate-300">Watch / Download link</label>
+        <input name="watchUrl" type="url" id="watchUrlInput" value="<%= movie.watchUrl || '' %>" class="input mt-1 w-full" placeholder="https://..." />
+        <p class="text-xs text-slate-500 mt-1">Opens in a new tab. Only use a source you own or are authorised to share.</p>
+      </div>
+
+      <!-- Series: episode links -->
+      <div id="section-series" class="md:col-span-2 hidden">
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-sm text-slate-300">Watch / Download links — Episodes</label>
+          <button type="button" onclick="addEpisode()" class="text-xs px-3 py-1 rounded-full border border-white/20 text-slate-300 hover:bg-white/10 transition">+ Add Episode</button>
+        </div>
+        <div id="episodes-list" class="space-y-2">
+          <% (movie.episodes || []).forEach(function(ep, i){ %>
+            <div class="flex gap-2 items-center">
+              <input name="episodeLabel" type="text" value="<%= ep.label || '' %>" placeholder="S1 E<%= i+1 %>" class="input w-32 shrink-0" />
+              <input name="episodeUrl" type="url" value="<%= ep.url || '' %>" placeholder="https://..." class="input flex-1" />
+              <button type="button" onclick="this.parentElement.remove()" class="text-slate-500 hover:text-red-400 transition px-1">✕</button>
+            </div>
+          <% }); %>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Add one link per episode. Label is optional (e.g. "S1 E1").</p>
+      </div>
+
+      <input type="hidden" name="status" value="<%= movie.status || 'published' %>" />
+
+      <div class="md:col-span-2 flex gap-3 pt-2">
+        <button class="btn-primary">Update Listing</button>
+        <a href="/admin/movies" class="btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const typeSelect = document.getElementById('typeSelect');
+  const sectionMovie = document.getElementById('section-movie');
+  const sectionSeries = document.getElementById('section-series');
+  const watchUrlInput = document.getElementById('watchUrlInput');
+
+  typeSelect.addEventListener('change', toggleType);
+
+  function toggleType() {
+    const isSeries = typeSelect.value === 'Series';
+    sectionMovie.classList.toggle('hidden', isSeries);
+    sectionSeries.classList.toggle('hidden', !isSeries);
+    watchUrlInput.required = !isSeries;
+  }
+
+  let epCount = document.getElementById('episodes-list').children.length;
+  function addEpisode() {
+    epCount++;
+    const row = document.createElement('div');
+    row.className = 'flex gap-2 items-center';
+    row.innerHTML = `
+      <input name="episodeLabel" type="text" placeholder="S1 E${epCount}" class="input w-32 shrink-0" />
+      <input name="episodeUrl" type="url" placeholder="https://..." class="input flex-1" />
+      <button type="button" onclick="this.parentElement.remove()" class="text-slate-500 hover:text-red-400 transition px-1">✕</button>
+    `;
+    document.getElementById('episodes-list').appendChild(row);
+  }
+
+  // Apply correct section on load
+  toggleType();
+</script>
+
+<%- include('../partials/layout-close') %>

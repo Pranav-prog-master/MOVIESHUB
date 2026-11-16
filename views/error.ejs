@@ -1,0 +1,10 @@
+<%- include('partials/layout-open') %>
+
+<section class="max-w-lg mx-auto px-4 pt-28 pb-20 text-center">
+  <p class="font-display text-7xl font-extrabold text-brand-500"><%= typeof status !== 'undefined' ? status : 500 %></p>
+  <h1 class="font-display text-2xl text-white mt-3"><%= typeof message !== 'undefined' ? message : 'Something went wrong' %></h1>
+  <a href="/" class="btn-primary inline-flex mt-6">← Back Home</a>
+</section>
+
+<%- include('partials/layout-close') %>
+

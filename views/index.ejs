@@ -1,0 +1,81 @@
+<%- include('partials/layout-open') %>
+
+<!-- Hero -->
+<% if (featured) { %>
+  <section class="relative">
+    <div class="absolute inset-0">
+      <img src="<%= featured.backdrop || featured.poster || '/images/hero.svg' %>" alt="" class="w-full h-full object-cover opacity-40"
+        onerror="this.src='/images/hero.svg'" />
+      <div class="absolute inset-0" style="background:linear-gradient(to top, var(--bg) 0%, color-mix(in srgb, var(--bg) 60%, transparent) 50%, color-mix(in srgb, var(--bg) 20%, transparent) 100%)"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to right, var(--bg) 0%, color-mix(in srgb, var(--bg) 40%, transparent) 50%, transparent 100%)"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 pt-16 pb-24 md:pt-28 md:pb-32 grid md:grid-cols-3 gap-8 items-end">
+      <div class="md:col-span-2">
+        <span class="inline-flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-brand-400 mb-3">
+          <span class="w-8 h-px bg-brand-500"></span> Featured
+        </span>
+        <h1 class="font-display text-4xl md:text-6xl font-extrabold leading-tight" style="color:var(--text)"><%= featured.title %></h1>
+        <div class="flex flex-wrap items-center gap-3 mt-4 text-sm" style="color:var(--muted)">
+          <% if (featured.releaseYear) { %><span><%= featured.releaseYear %></span><% } %>
+          <% if (featured.category) { %><span class="text-slate-500">•</span><span><%= featured.category %></span><% } %>
+          <% if (featured.rating) { %>
+            <span class="text-slate-500">•</span>
+            <span class="flex items-center gap-1 text-amber-300"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .9-5 4.8 1.3 7-6.3-3.4L5.7 21l1.3-7-5-4.8 7-.9z"/></svg><%= featured.rating.toFixed(1) %></span>
+          <% } %>
+        </div>
+        <p class="mt-4 max-w-xl line-clamp-3" style="color:var(--muted)"><%= featured.description || 'No description available.' %></p>
+
+        <div class="flex flex-wrap gap-3 mt-6">
+          <% if (featured.watchUrl) { %>
+            <% if (typeof user !== 'undefined' && user) { %>
+              <a href="<%= featured.watchUrl %>" target="_blank" rel="noopener noreferrer" class="btn-primary">▶ Watch / Download</a>
+            <% } else { %>
+              <a href="/login" class="btn-primary">🔒 Login to Watch</a>
+            <% } %>
+          <% } %>
+          <% if (featured.trailerUrl) { %><a href="<%= featured.trailerUrl %>" target="_blank" rel="noopener" class="btn-ghost">🎬 Trailer</a><% } %>
+          <a href="/movie/<%= featured.slug %>" class="btn-ghost">Details</a>
+        </div>
+      </div>
+
+      <div class="hidden md:block">
+        <img src="<%= featured.poster || '/images/placeholder.svg' %>" alt="<%= featured.title %>"
+          class="rounded-2xl shadow-2xl shadow-black/50 border border-white/10 w-48 ml-auto"
+          onerror="this.src='/images/placeholder.svg'" />
+      </div>
+    </div>
+  </section>
+<% } %>
+
+<!-- Main categories -->
+<section class="max-w-7xl mx-auto px-4 mt-8">
+  <div class="flex flex-wrap gap-2">
+    <% [
+      ['Hollywood', '/category/hollywood'],
+      ['Bollywood', '/category/bollywood'],
+      ['South', '/category/south'],
+      ['Anime', '/category/anime'],
+      ['Cartoon', '/category/cartoon']
+    ].forEach(function (item) { %>
+      <a href="<%= item[1] %>" class="btn-ghost"><%= item[0] %></a>
+    <% }); %>
+  </div>
+</section>
+
+<%- include('partials/section', { sectionTitle: 'Hollywood', sectionMovies: hollywood, sectionLink: '/category/hollywood' }) %>
+<%- include('partials/section', { sectionTitle: 'Bollywood', sectionMovies: bollywood, sectionLink: '/category/bollywood' }) %>
+<%- include('partials/section', { sectionTitle: 'South', sectionMovies: south, sectionLink: '/category/south' }) %>
+<%- include('partials/section', { sectionTitle: 'Anime', sectionMovies: anime, sectionLink: '/category/anime' }) %>
+<%- include('partials/section', { sectionTitle: 'Cartoon', sectionMovies: cartoon, sectionLink: '/category/cartoon' }) %>
+
+<section class="max-w-7xl mx-auto px-4 mt-16">
+    <div class="glass rounded-3xl p-8 md:p-12 text-center" style="background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(153,27,27,0.08))">
+      <h2 class="font-display text-3xl font-bold" style="color:var(--text)">Movie information and official links</h2>
+      <p class="mt-2 max-w-2xl mx-auto" style="color:var(--muted)">Browse movie posters, preview screenshots and details, then continue to an external source you are authorised to use.</p>
+    <a href="/movies" class="btn-primary mt-6 inline-flex">Browse Movies</a>
+  </div>
+</section>
+
+<%- include('partials/layout-close') %>
+

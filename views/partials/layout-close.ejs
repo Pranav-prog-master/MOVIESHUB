@@ -1,0 +1,43 @@
+    </main>
+
+    <!-- Mobile bottom navigation -->
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-50 glass border-t" style="border-color:var(--border)">
+      <div class="grid grid-cols-5 text-center text-[11px]">
+        <a href="/" class="py-2 flex flex-col items-center gap-1 transition-colors" style="color:var(--muted)">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home
+        </a>
+        <a href="/movies" class="py-2 flex flex-col items-center gap-1 transition-colors" style="color:var(--muted)">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>Movies
+        </a>
+        <a href="/search" class="py-2 flex flex-col items-center gap-1 transition-colors" style="color:var(--muted)">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Search
+        </a>
+        <a href="/genres" class="py-2 flex flex-col items-center gap-1 transition-colors" style="color:var(--muted)">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Genres
+        </a>
+        <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+          <a href="/admin" class="py-2 flex flex-col items-center gap-1 transition-colors" style="color:var(--brand)">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM13 13h8v8h-8zM3 13h8v8H3z"/></svg>Admin
+          </a>
+        <% } else { %>
+          <a href="/login" class="py-2 flex flex-col items-center gap-1 transition-colors" style="color:var(--muted)">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Login
+          </a>
+        <% } %>
+      </div>
+    </nav>
+
+    <%- include('footer') %>
+
+    <% if (typeof flash !== 'undefined' && flash) { %>
+      <script>
+        window.addEventListener('DOMContentLoaded', function () {
+          showToast(<%- JSON.stringify(flash.type) %>, <%- JSON.stringify(flash.message) %>);
+        });
+      </script>
+    <% } %>
+
+    <%- include('scripts') %>
+  </body>
+</html>
+

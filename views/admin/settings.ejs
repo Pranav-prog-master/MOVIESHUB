@@ -1,0 +1,37 @@
+<%- include('../partials/layout-open') %>
+
+<div class="flex">
+  <%- include('../partials/admin-sidebar') %>
+  <div class="flex-1 p-4 md:p-8">
+    <h1 class="font-display text-2xl font-bold text-white mb-6">Settings</h1>
+
+    <div class="glass rounded-2xl border border-white/10 p-6 max-w-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-white/5 pb-3">
+        <div>
+          <p class="text-white">Database</p>
+          <p class="text-xs text-slate-500">Connection target</p>
+        </div>
+        <span class="text-sm text-slate-300"><%= dbUri %></span>
+      </div>
+      <div class="flex items-center justify-between border-b border-white/5 pb-3">
+        <div>
+          <p class="text-white">External Discovery (TMDB)</p>
+          <p class="text-xs text-slate-500">Used for the Discover feature</p>
+        </div>
+        <span class="text-sm <%= tmdbConfigured ? 'text-emerald-300' : 'text-amber-300' %>"><%= tmdbConfigured ? 'Configured' : 'Not configured' %></span>
+      </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-white">Legal compliance</p>
+          <p class="text-xs text-slate-500">Only authorized sources are stored</p>
+        </div>
+        <span class="text-sm text-emerald-300">Enforced</span>
+      </div>
+    </div>
+
+    <p class="text-xs text-slate-500 mt-4">Configure these via the <code>.env</code> file. Restart the server after changes.</p>
+  </div>
+</div>
+
+<%- include('../partials/layout-close') %>
+

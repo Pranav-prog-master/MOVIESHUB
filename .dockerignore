@@ -1,0 +1,5 @@
+node_modules
+.env
+public/uploads/posters/*
+public/uploads/backdrops/*
+public/uploads/screenshots/*

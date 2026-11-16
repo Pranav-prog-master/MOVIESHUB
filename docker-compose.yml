@@ -1,0 +1,12 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: moviehub-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - moviehub-data:/data/db
+
+volumes:
+  moviehub-data:

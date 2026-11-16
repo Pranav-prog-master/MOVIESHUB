@@ -1,0 +1,51 @@
+<%- include('../partials/layout-open') %>
+
+<div class="flex">
+  <%- include('../partials/admin-sidebar') %>
+  <div class="flex-1 p-4 md:p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="font-display text-2xl font-bold text-white">Movies</h1>
+      <a href="/admin/movies/new" class="btn-primary">＋ Add Movie</a>
+    </div>
+
+    <div class="glass rounded-2xl border border-white/10 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="text-slate-400 text-left border-b border-white/5">
+          <tr>
+            <th class="p-3">Poster</th>
+            <th class="p-3">Title</th>
+            <th class="p-3">Year</th>
+            <th class="p-3">Category</th>
+            <th class="p-3">Status</th>
+            <th class="p-3 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (movies && movies.length) { movies.forEach(function (m) { %>
+            <tr class="border-b border-white/5 hover:bg-white/5">
+              <td class="p-3"><img src="<%= m.poster || '/images/placeholder.svg' %>" class="w-10 h-14 object-cover rounded" onerror="this.src='/images/placeholder.svg'" /></td>
+              <td class="p-3 text-white font-medium"><%= m.title %></td>
+              <td class="p-3 text-slate-400"><%= m.releaseYear || '—' %></td>
+              <td class="p-3 text-slate-400"><%= m.category || '—' %></td>
+              <td class="p-3"><span class="text-xs px-2 py-1 rounded-full <%= m.status === 'published' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-amber-500/15 text-amber-300' %>"><%= m.status %></span></td>
+              <td class="p-3">
+                <div class="flex gap-2 justify-end">
+                  <a href="/admin/movies/<%= m._id %>/edit" class="btn-ghost !py-1 !px-2 !text-xs">Edit</a>
+                  <a href="/movie/<%= m.slug || m._id %>" class="btn-ghost !py-1 !px-2 !text-xs">View</a>
+                  <form action="/admin/movies/<%= m._id %>/delete" method="post" onsubmit="return confirm('Delete this movie?');">
+                    <button class="text-xs px-2 py-1 rounded-lg bg-red-500/15 text-red-300 hover:bg-red-500/25">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }); } else { %>
+            <tr><td colspan="6" class="p-6 text-center text-slate-400">No movies yet. <a href="/admin/movies/new" class="text-brand-400">Add one</a>.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/layout-close') %>
+
